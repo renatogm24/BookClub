@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.codingdojo.bookclub.models.Book;
+import com.codingdojo.bookclub.models.User;
 import com.codingdojo.bookclub.repositories.BookRepository;
 
 
@@ -20,6 +21,31 @@ public class BookService {
     public List<Book> allBooks() {
         return bookRepo.findAll();
     }
+    
+    public List<Book> allBooksAvailable() {
+        return bookRepo.findAllByBorrower(null);
+    }
+    
+    public List<Book> allBooksBorrowedBy(User user) {
+        return bookRepo.findAllByBorrower(user);
+    }
+    
+    public List<Book> allBooksBorrowedById(Long id) {
+        return bookRepo.findAllByBorrower_Id(id);
+    }
+    
+    public void borrowBook(Long book_id, User user) {
+    	bookRepo.borrow(book_id,user);
+    }
+    
+    public void borrowBookId(Long book_id, Long user_id) {
+    	bookRepo.borrowId(book_id,user_id);
+    }
+    
+    public void returnBook(Long book_id, Long user_id) {
+    	bookRepo.returnBook(book_id,user_id);
+    }
+    
     // crea un book
     public Book createBook(Book b) {
         return bookRepo.save(b);

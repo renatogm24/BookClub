@@ -42,6 +42,51 @@ public class BookController {
         return "/dashboard.jsp";
     }
 	
+	@RequestMapping("/bookmarket")
+	 public String bookmarket(Model model, HttpSession session) {
+       
+       Long id = (Long) session.getAttribute("userid");
+       User user = userService.getUserSession(id);
+       
+       List<Book> booksAvailable = bookService.allBooksAvailable();
+       //List<Book> booksBorrowedBy = bookService.allBooksBorrowedBy(user);
+       List<Book> booksBorrowedBy = bookService.allBooksBorrowedById(id);
+       
+       model.addAttribute("booksAvailable", booksAvailable);
+       model.addAttribute("booksBorrowedBy", booksBorrowedBy);
+       
+       model.addAttribute("user", user);
+       return "/books/market.jsp";
+   }
+	
+	@GetMapping("/books/{id}/borrow")
+	public String borrowBook(@PathVariable("id") Long book_id, Model model, HttpSession session) {		
+		Long user_id = (Long) session.getAttribute("userid");
+		User user = userService.getUserSession(user_id);
+		
+		Book bookAux = bookService.findBook(book_id);
+		Long iduser = bookAux.getUser().getId();
+		
+		if (user_id.equals(iduser)) {
+			return "redirect:/bookmarket";
+		}else {
+			bookService.borrowBookId(book_id, user_id);
+			return "redirect:/bookmarket";	
+		}
+		
+		//bookService.borrowBook(book_id, user);
+		//bookService.borrowBookId(book_id, user_id);
+		//return "redirect:/bookmarket";	
+	}
+	
+	
+	@GetMapping("/books/{id}/return")
+	public String returnBook(@PathVariable("id") Long book_id, Model model, HttpSession session) {
+		Long user_id = (Long) session.getAttribute("userid");
+		bookService.returnBook(book_id, user_id);
+		return "redirect:/bookmarket";			
+	}
+	
 
 	@RequestMapping(value = "/books", method = RequestMethod.POST)
 	public String create(@Valid @ModelAttribute("book") Book book, BindingResult result, Model model, HttpSession session) {
@@ -52,6 +97,7 @@ public class BookController {
 		}
 		
 		book.setUser(userService.getUserSession((Long) session.getAttribute("userid")));
+		book.setBorrower(null);
 		
 		bookService.createBook(book);
 		return "redirect:/books";
@@ -87,15 +133,23 @@ public class BookController {
 	public String update(@Valid @ModelAttribute("book") Book book, BindingResult result) {
 		if (result.hasErrors()) {
 			return "/books/edit.jsp";
-		} else {
+		} else {			
 			bookService.updateBook(book);
 			return "redirect:/books";
 		}
 	}
 	
-	@DeleteMapping("/books/{id}")
-    public String destroy(@PathVariable("id") Long id) {
-		bookService.deleteBook(id);
-        return "redirect:/books";
+	@GetMapping("/books/{id}/delete")
+    public String destroy(@PathVariable("id") Long id, HttpSession session) {
+		Book bookAux = bookService.findBook(id);
+		Long idsession = (Long) session.getAttribute("userid");
+		Long iduser = (Long) bookAux.getUser().getId();
+		if (iduser.equals(idsession)) {
+			bookService.deleteBook(id);
+			return "redirect:/books";	
+		}else {
+			System.out.println("Holaaa");
+			return "redirect:/books";	
+		}	
     }
 }

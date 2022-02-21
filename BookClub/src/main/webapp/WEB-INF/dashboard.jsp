@@ -19,11 +19,12 @@
 		<div class="d-flex justify-content-between">
 			<div class="d-flex flex-column">
 				<h3>Welcome, ${user.getName()}</h3>
-				<h4 class="mt-3">Books from everyone's shelves:</h4>
+				<h4 class="my-3">Books from everyone's shelves:</h4>
+				<a class="btn btn-sm btn-primary" href="/bookmarket">Book Market</a>
 			</div>
 			<div class="d-flex flex-column">
 				<a class="btn btn-sm btn-danger" href="/logout">Logout</a>
-				<a class="btn btn-sm btn-primary mt-3" href="/books/new">+ Add a to my shelf!</a>
+				<a class="btn btn-sm btn-primary my-3" href="/books/new">+ Add a to my shelf!</a>
 			</div>
 		</div>
 		<div class="my-3">

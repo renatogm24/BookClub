@@ -30,6 +30,8 @@
 						<input type="hidden" name="_method" value="put">
 						
 						<form:input type="hidden" path="user" value="${book.getUser().getId()}"/>
+						
+						<form:input type="hidden" path="borrower" value="${book.getBorrower().getId()}"/>
 
 						<form:label for="title" path="title" class="form-label">Title:</form:label>
 						<form:errors path="title" class="text-danger" />
@@ -48,6 +50,7 @@
 						<button class="btn btn-primary mt-4" type="submit">Submit</button>
 					</form:form>
 				</div>
+				<a class="btn btn-danger" href="/books/${book.getId()}/delete">Delete</a>
 			</div>
 		</div>
 	</div>
