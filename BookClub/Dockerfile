@@ -19,4 +19,4 @@ RUN ./mvnw dependency:go-offline -B
 
 RUN ./mvnw package -DskipTests
 RUN ls -al
-ENTRYPOINT ["java","-jar","target/BookClub-0.0.1-SNAPSHOT.war"]
+ENTRYPOINT ["java","-jar","target/Authentication-0.0.1-SNAPSHOT.war"]
